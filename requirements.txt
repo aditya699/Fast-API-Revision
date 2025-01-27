@@ -1,0 +1,22 @@
+fastapi
+uvicorn
+motor
+pymongo
+python-dotenv
+jinja2
+# Authentication
+python-jose
+passlib
+python-multipart
+httpx
+
+# AI/LLM
+langchain
+langchain-anthropic
+langchain-google-genai
+
+# PDF Processing
+pypdf
+
+# Utilities
+pydantic
