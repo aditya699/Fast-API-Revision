@@ -10,7 +10,7 @@ passlib
 python-multipart
 httpx
 msal
-
+itsdangerous
 
 # AI/LLM
 langchain
