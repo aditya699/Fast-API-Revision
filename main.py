@@ -25,6 +25,7 @@ async def login_page(request: Request):
     # If already logged in, redirect to home
     if verify_session(request):
         return RedirectResponse(url="/")
+    # We must include the request in the template response so that we can use it in the template(also even we are not using it in the template, we must include it)
     return templates.TemplateResponse("login.html", {"request": request})
 
 @app.get("/")
@@ -35,6 +36,7 @@ async def home(request: Request):
     
     # Get user info for template
     user_info = request.session.get("user_info")
+    #in index.html we are using the user info to display the user's name
     return templates.TemplateResponse("index.html", {
         "request": request,
         "user": user_info

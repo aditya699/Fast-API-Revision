@@ -44,6 +44,7 @@ def get_msal_app():
 @router.get("/microsoft_login")
 async def microsoft_login(request: Request):
     try:
+        # We are checking if the user is already logged in, if yes we can redirect them to the home page
         if verify_session(request):
             return RedirectResponse(url="/")
         
@@ -92,7 +93,7 @@ async def callback(request: Request):
         
 
         print("User Info:", user_info)
-
+        #   this is main line where session is created
         request.session["user_info"] = {
             "name": user_info["name"],
             "email": user_info["email"],
