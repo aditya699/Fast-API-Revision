@@ -21,7 +21,7 @@
             <div class="flex items-center ml-auto">
                 {% if user %}
                     <div class="flex items-center mr-4">
-                        <span class="text-gray-700">Welcome, {{ user.name }}</span>
+                        <span class="text-gray-700">Welcome, {{ user.name if user.name else 'We respect your privacy' }}</span>
                     </div>
                     <a href="/auth/logout" 
                     class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200">

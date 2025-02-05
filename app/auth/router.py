@@ -21,10 +21,11 @@ import os
 from dotenv import load_dotenv
 import time
 from .utils import verify_session
+from ..db.users import insert_user,upsert_user,get_user
+from datetime import datetime
 load_dotenv()
 #This is the router for the authentication
 router = APIRouter(prefix="/auth")
-
 
 def get_msal_app():
     '''
@@ -45,9 +46,9 @@ def get_msal_app():
 async def microsoft_login(request: Request):
     try:
         # We are checking if the user is already logged in, if yes we can redirect them to the home page
-        if verify_session(request):
+        if verify_session(request):  #Upsert the user info in the database , only updated_at will be updated
+            await upsert_user(request.session["user_info"]["id"],datetime.utcnow())
             return RedirectResponse(url="/")
-        
         else:
             # # Use above client
             client = get_msal_app()
@@ -91,8 +92,16 @@ async def callback(request: Request):
             "expires_in_timestamp": time.time() + result["expires_in"]
             }
         
-
+        #Check if the user is already in the database
+        user=await get_user(user_info["id"])
+        if user:
+            await upsert_user(user_info["id"],datetime.utcnow())
+        else:
+            await insert_user(user_info["id"],user_info["name"],user_info["email"],datetime.utcnow(),datetime.utcnow())
+        
         print("User Info:", user_info)
+
+
         #   this is main line where session is created
         request.session["user_info"] = {
             "name": user_info["name"],
@@ -107,7 +116,6 @@ async def callback(request: Request):
     except Exception as e:
         print("Callback error:", str(e))
         raise HTTPException(status_code=500, detail=str(e))
-    
 
 
 @router.get("/logout")

@@ -32,8 +32,12 @@ async def login_page(request: Request):
 async def home(request: Request):
     # Check if user is logged in
     if not verify_session(request):
-        return RedirectResponse(url="/auth/microsoft_login")
+        return templates.TemplateResponse("index.html", {
+            "request": request,
+            "user": "We respect your privacy"
+        })
     
+
     # Get user info for template
     user_info = request.session.get("user_info")
     #in index.html we are using the user info to display the user's name
