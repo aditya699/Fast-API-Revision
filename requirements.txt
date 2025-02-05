@@ -18,7 +18,7 @@ langchain-anthropic
 langchain-google-genai
 
 # PDF Processing
-pypdf
+PyPDF2
 
 # Utilities
 pydantic

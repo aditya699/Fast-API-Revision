@@ -34,40 +34,88 @@
 
     <!-- Main Content -->
     <main class="container mx-auto mt-10 p-4">
-        <div class="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto">
-            <h2 class="text-2xl font-bold mb-4 text-center">Upload Your Resume</h2>
+        <div class="bg-white rounded-lg shadow-md p-8 max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Upload Your Resume</h2>
             
             <!-- Upload Form -->
-            <form action="/upload" method="post" enctype="multipart/form-data" class="space-y-4">
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                    <input 
-                        type="file" 
-                        name="pdf_file" 
-                        accept=".pdf" 
-                        class="hidden" 
-                        id="pdf_input"
-                        required
-                    >
-                    <label for="pdf_input" class="cursor-pointer">
-                        <div class="text-gray-600">
-                            <p>Drop your PDF here or click to upload</p>
-                            <p class="text-sm text-gray-400 mt-1">Only PDF files are supported</p>
-                        </div>
-                    </label>
+            <form action="/pdf/upload" method="post" enctype="multipart/form-data" class="space-y-6">
+                <div class="border-2 border-dashed border-blue-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors duration-200 cursor-pointer bg-blue-50">
+                    <div class="space-y-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <input 
+                            type="file" 
+                            name="pdf_file" 
+                            accept=".pdf" 
+                            id="pdf_input"
+                            required
+                            class="hidden"
+                        >
+                        <label for="pdf_input" class="block">
+                            <span class="text-blue-600 font-medium hover:text-blue-700 cursor-pointer">Click to upload</span>
+                            <span class="text-gray-600"> or drag and drop</span>
+                        </label>
+                        <p class="text-sm text-gray-500">Only PDF files are supported</p>
+                    </div>
                 </div>
                 
                 <button 
                     type="submit" 
-                    class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
+                    class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-lg shadow-md hover:shadow-lg"
                 >
                     Analyze Resume
                 </button>
             </form>
 
-            <!-- Coming Soon Message -->
-            <div class="mt-4 text-center">
-                <p class="text-lg text-gray-700">Coming Soon! Will be worth the wait.</p>
+            <!-- File Upload Status -->
+            <div id="upload-status" class="mt-6 text-center hidden">
+                <div class="animate-pulse flex flex-col items-center">
+                    <div class="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    <p class="text-lg text-gray-700 mt-4">Analyzing your resume...</p>
+                </div>
             </div>
+
+            <script>
+                const form = document.querySelector('form');
+                const status = document.getElementById('upload-status');
+                const fileInput = document.getElementById('pdf_input');
+                const dropZone = document.querySelector('.border-dashed');
+                
+                form.addEventListener('submit', (e) => {
+                    status.classList.remove('hidden');
+                });
+
+                // Show filename when file is selected
+                fileInput.addEventListener('change', function(e) {
+                    if(this.files[0]) {
+                        const fileName = this.files[0].name;
+                        dropZone.querySelector('p').textContent = `Selected file: ${fileName}`;
+                    }
+                });
+
+                // Drag and drop functionality
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('border-blue-500', 'bg-blue-100');
+                });
+
+                dropZone.addEventListener('dragleave', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('border-blue-500', 'bg-blue-100');
+                });
+
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('border-blue-500', 'bg-blue-100');
+                    
+                    const files = e.dataTransfer.files;
+                    if(files[0]) {
+                        fileInput.files = files;
+                        dropZone.querySelector('p').textContent = `Selected file: ${files[0].name}`;
+                    }
+                });
+            </script>
         </div>
     </main>
 </body>

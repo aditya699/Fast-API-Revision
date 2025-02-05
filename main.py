@@ -3,6 +3,7 @@ from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from app.auth.router import router as auth_router
+from app.pdf.route import router as pdf_router
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.responses import RedirectResponse
 from app.auth.utils import verify_session  # Import our verify function
@@ -13,6 +14,7 @@ load_dotenv()
 
 app = FastAPI(title="Job-Dundo.AI")
 app.include_router(auth_router)
+app.include_router(pdf_router)
 # Add session middleware to handle user sessions more effectively, using session middleware is a abstract implementation of middleware so that we do not have to manage the session manually
 app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY"), max_age=86400)  # 1 DAY
 
